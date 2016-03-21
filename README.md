@@ -17,6 +17,5 @@ A pull request should satisfy the following requirements:
 - new changes should be tested and shouldn't break anything;
 - pull request for one fix or one feature(could be several commits);
 - try to keep the code style of the project;
-- 
 
 
