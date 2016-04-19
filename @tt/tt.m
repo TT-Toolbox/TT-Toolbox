@@ -121,6 +121,9 @@ methods (Access = public)
     x = ctranspose(x);
     % Check for imaginary entries
     res = isreal(x);
+    % Return real/imaginary parts
+    y = real(x);
+    y = imag(x);
     % Grumbling/extracting ordinary types
     [d,n,r,cores] = check_consistency(x);
     % TT-orth
