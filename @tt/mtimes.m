@@ -36,6 +36,12 @@ if isa(a,'tt') && isa(b,'tt')
         error('Mode sizes of a and b are inconsistent');
     end
     
+    if (all(na(:,1) == 1)) && (all(nb(:,2) == 1)) && (min(ra(1)*rb(1), ra(d+1)*rb(d+1)) == 1)
+        % The result is a number, can use a more efficient dot
+        c = dot(tt(a)', tt(b));
+        return;
+    end
+    
     % Make nb the first mode in b
     c = cellfun(@(x)matricize(x, 2), b, 'UniformOutput', false);
     
