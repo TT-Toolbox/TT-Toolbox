@@ -14,14 +14,38 @@ function [c]=mtimes(a,b,varargin)
 
 % tt*scalar
 if isa(a,'tt') && isa(b,'double')
-    c = a;
-    c.cores{c.d} = tensorprod(c.cores{c.d}, b.', 4);
+    [d,~,~,cores] = check_consistency(a);
+    if isscalar(b) 
+        pos = max(~a.orth, a.orth);
+        cores{pos} = b*cores{pos};
+        c = tt(cores); 
+        c.orth = a.orth; % orthogonality is kept intact
+    else
+        cores{d} = tensorprod(cores{d}, b.', 4);
+        c = tt(cores); 
+        if a.orth == d 
+            c.orth == d;
+        end
+    end
+    return;
 end
 
 % scalar*tt
 if isa(a,'double') && isa(b,'tt')
-    c = b;
-    c.cores{1} = tensorprod(c.cores{1}, a, 1);
+    [d,~,~,cores] = check_consistency(b);
+    if isscalar(a) 
+        pos = max(~b.orth, b.orth);
+        cores{pos} = a*cores{pos};
+        c = tt(cores);
+        c.orth = b.orth; % orthogonality is kept intact
+    else
+        cores{1} = tensorprod(cores{1}, a, 1);
+        c = tt(cores); 
+        if a.orth == 1
+            c.orth == 1;
+        end
+    end
+    return;
 end
 
 

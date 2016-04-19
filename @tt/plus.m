@@ -17,11 +17,7 @@ if isa(a,'tt') && isa(b,'double')
     if numel(b) ~= 1
         error('b should be scalar')
     end
-    
-    ons = num2cell(a.n, 2);
-    ons = cellfun(@(x)ones([1,x,1]), ons, 'UniformOutput', false);
-    ons = tt(ons);
-    c = a + b*ons;
+    c = a + b*tt.ones(a.n);
 end
 
 % scalar+tt = tt+scalar*ones
@@ -29,11 +25,7 @@ if isa(a,'double') && isa(b,'tt')
     if numel(a) ~= 1
         error('a should be scalar')
     end
-    
-    ons = num2cell(b.n, 2);
-    ons = cellfun(@(x)ones([1,x,1]), ons, 'UniformOutput', false);
-    ons = tt(ons);
-    c = a*ons + b;
+    c = a*tt.ones(b.n) + b;
 end
 
 % tt+tt

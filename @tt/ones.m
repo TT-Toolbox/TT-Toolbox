@@ -14,10 +14,7 @@ if any(n(:) ~= round(real(n(:)))) || any(n(:) < 1) || (size(n,2) ~= 2)
     error('Size vector must be a dx2 matrix of integers > 0')
 end
 
-d = size(n,1);
-cores = cell(d, 1);
-for i = 1:d
-    cores{i} = ones(1, n(i,1), n(i,2), 1);
-end
+nn = num2cell(n, 2);
+cores = cellfun(@(x) ones([1,x,1]), nn, 'UniformOutput', false);
 x = tt(cores);
 end
