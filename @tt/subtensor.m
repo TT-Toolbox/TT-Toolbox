@@ -1,4 +1,4 @@
-function [b]=subtensor(a,istart,iend)
+function [b] = subtensor(a,istart,iend)
 % SUBTENSOR   part of a tensor train
 %
 %   b = SUBTENSOR(a,istart,iend) returns TT cores of a from istart to iend

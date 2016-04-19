@@ -112,6 +112,8 @@ methods (Access = public)
     z = mtimes(x,y);
     % Hadamard product
     z = times(x,y);
+    % Inner product
+    z = dot(x,y,varargin);
     % Transpositions
     x = transpose(x);
     x = ctranspose(x);
@@ -126,6 +128,8 @@ methods (Access = public)
     % Display
     disp(x, name);
     display(x);
+    % Subtensor
+    b = subtensor(a,istart,iend);
 end
 
 methods( Static, Access = public )
