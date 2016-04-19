@@ -29,10 +29,11 @@ function x = round(x, opts)
 %   -> vector: exact target rank
 %   -> struct: opts structure
 truncatetorank = false;
-if isscalar(opts)
+if (isscalar(opts)) && (isa(opts, 'double'))
     opts = struct('reltol',opts);
 elseif isfloat(opts)
     opts = struct('rank', opts);
+elseif isa(opts, 'struct') % that's ok
 else
     error('Error in second argument. Specify either a scalar (rel. tol), a rank vector or a struct')
 end
@@ -133,19 +134,3 @@ end
 x.cores = cores;
 x.orth = d - orth_pos + 1;
 end
-
-% Cut singular values according to supplied opts
-function s = cut_singvals(singvals, opts)
-    s_abs = inf;
-    s_rel = inf;
-    if opts.abstol
-        s_abs = find(singvals > opts.abstol, 1, 'last');
-        if isempty(s_abs), s_abs = 1; end
-    end
-    if opts.reltol
-        s_rel = find(singvals > opts.reltol*singvals(1), 1, 'last');
-        if isempty(s_rel), s_rel = 1; end
-    end
-    s = min([s_abs, s_rel, opts.maxrank, length(singvals)]);
-end
-
