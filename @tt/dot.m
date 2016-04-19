@@ -1,4 +1,4 @@
-function [c]=dot(a,b,varargin)
+function [c] = dot(a,b,varargin)
 % DOT   inner product
 %
 %   c = DOT(a,b) Inner product of two TT vectors (matrices are considered

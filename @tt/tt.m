@@ -114,6 +114,8 @@ methods (Access = public)
     z = times(x,y);
     % Norm
     res = norm(x);
+    % Inner product
+    z = dot(x,y,varargin);
     % Transpositions
     x = transpose(x);
     x = ctranspose(x);
@@ -128,6 +130,8 @@ methods (Access = public)
     % Display
     disp(x, name);
     display(x);
+    % Subtensor
+    b = subtensor(a,istart,iend);
 end
 
 methods( Static, Access = public )
