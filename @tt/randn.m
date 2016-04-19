@@ -10,10 +10,10 @@ function x = randn(r, n)
 %   http://github.com/TT-Toolbox/TT-Toolbox
 %   BSD 2-clause license, see LICENSE
 
-if any(r ~= round(real(r))) || any(r < 1) || (min(size(r)) ~= 1)
+if any(r(:) ~= round(real(r(:)))) || any(r(:) < 1) || (min(size(r)) ~= 1)
     error('Rank vector must be a vector of integers > 0')
 end
-if any(n ~= round(real(n))) || any(n < 1) || (size(n,2) ~= 2)
+if any(n(:) ~= round(real(n(:)))) || any(n(:) < 1) || (size(n,2) ~= 2)
     error('Size vector must be a dx2 matrix of integers > 0')
 end
 if size(n,1)+1 ~= length(r)
