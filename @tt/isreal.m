@@ -11,5 +11,5 @@ function res = isreal(x)
 %   BSD 2-clause license, see LICENSE
 
 [~,~,~,cores] = check_consistency(x);
-res = all(cellfun(@(y) isreal(y), x);
+res = all(cellfun(@(y) isreal(y), cores));
 end
