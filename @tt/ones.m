@@ -1,9 +1,9 @@
-function x = randn(r, n)
-% RANDN   Creates a random TT tensor
-%   x = RANDN(r, n) returns a tensor with ranks r and mode sizes n such that each
-%   core has entries sampled from the standard normal distribution.
+function x = ones(r, n)
+% ONES   Creates a TT tensor with all-ones cores
+%   x = ONES(r, n) returns a tensor with ranks r and mode sizes n such that each
+%   core containes only 1s.
 %
-%   See also: TT.rand, TT.zeros, TT.ones
+%   See also: TT.randn, TT.rand, TT.zeros
 
 %   TT-Toolbox
 %   Copyright: TT-Toolbox team, 2016
@@ -23,7 +23,7 @@ end
 d = size(n,1);
 cores = cell(d, 1);
 for i = 1:d
-    cores{i} = randn(r(i), n(i,1), n(i,2), r(i+1));
+    cores{i} = ones(r(i), n(i,1), n(i,2), r(i+1));
 end
 x = tt(cores);
 end

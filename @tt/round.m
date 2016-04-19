@@ -43,7 +43,7 @@ if isfield(opts, 'rank')
     if size(opts.rank) ~= size(r)
         error('Error in option struct: opts.rank is not of size(x.r)') 
     end
-    if any(opts.rank ~= round(opts.rank)) || any(opts.rank < 1) 
+    if any(opts.rank ~= round(real(opts.rank))) || any(opts.rank < 1) 
         error('Rank vector must be an integer vector with all values bigger or equal than one')
     end
     if any(opts.rank > r)
@@ -139,7 +139,7 @@ function s = cut_singvals(singvals, opts)
     s_abs = inf;
     s_rel = inf;
     if opts.abstol
-        s_abs = find(singvals > opts.abstol*singvals(1), 1, 'last');
+        s_abs = find(singvals > opts.abstol, 1, 'last');
         if isempty(s_abs), s_abs = 1; end
     end
     if opts.reltol

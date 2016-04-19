@@ -112,6 +112,8 @@ methods (Access = public)
     z = mtimes(x,y);
     % Hadamard product
     z = times(x,y);
+    % Norm
+    res = norm(x);
     % Transpositions
     x = transpose(x);
     x = ctranspose(x);
@@ -120,9 +122,9 @@ methods (Access = public)
     % Grumbling/extracting ordinary types
     [d,n,r,cores] = check_consistency(x);
     % TT-orth
-    [x] = orthogonalize(x, idx);
-    % Truncation
-    [x] = round(x, TruncOpts);
+    x = orthogonalize(x, idx);
+    % Truncation to tolerance or exact target rank
+    x = round(x, truncOpts);
     % Display
     disp(x, name);
     display(x);
@@ -133,6 +135,10 @@ methods( Static, Access = public )
     x = rand(r, n);
     % Create a tt with entries from uniform distribution
     x = randn(r, n);
+    % Create a tt with all ones as cores 
+    x = ones(r, n);
+    % Create a tt with all zeros as cores 
+    x = zeros(r, n);
 end
 
 end
