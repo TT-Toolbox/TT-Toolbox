@@ -17,6 +17,7 @@ function x = round(x, opts)
 %       opts.rank       [(d+1)x1 array] Final target rank which is satisfied exactly
 %                                       Note: cannot be used together with any
 %                                       of the other three options.
+%   See also: TT.orthogonalize, TT, TT.compress
 
 %   TT-Toolbox
 %   Copyright: TT-Toolbox team, 2016
@@ -58,6 +59,10 @@ end
 if (opts.abstol ~= false || opts.reltol ~= false) && truncatetorank
     error('Cannot have both tolerance-based rounding and exact target rank at the same time!')
 end
+
+% Divide tolerances by sqrt(d-1), otherwise the total error may be >tol
+opts.abstol = opts.abstol/sqrt(d-1);
+opts.reltol = opts.reltol/sqrt(d-1);
 
 % Orthogonalize tensor either fully left- or right-orthogonal.
 % We choose full left/right orthogonality based on which end is

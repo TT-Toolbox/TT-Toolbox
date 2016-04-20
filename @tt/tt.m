@@ -2,12 +2,15 @@ classdef tt
 % TT   Tensor Train Matrix class/constructors
 %   x = TT  returns an empty Tensor Train (of dimension 0).
 %   x = TT(cores) creates a Tensor Train from a cell array of TT cores.
+%   x = TT(A) compresses a full tensor A with a tolerance max(n*m)*eps(norm(A))
 %   x = TT(A, tol) compresses a full tensor A with a tolerance tol.
 %   x = TT(A, TruncOpts) compresses a full tensor A according to the
 %       truncation options in the structure TruncOpts. See ROUND for
 %       details.
+%   x = TT(A, TruncOpts, n) compresses a full tensor A, reshaping it
+%       according to the d x 2 array of mode sizes n
 %
-%   See also: ROUND
+%   See also: TT.ROUND, TT.COMPRESS
 
 %   TT-Toolbox
 %   Copyright: TT-Toolbox team, 2016
@@ -87,11 +90,14 @@ methods (Access = public)
         % Allow to return an empty tt
         if (nargin == 0)
             tt.cores = [];
-            return;
         end
         % Populate tt with a cell of cores
         if (nargin == 1) && isa(varargin{1}, 'cell')
             tt.cores = varargin{1};
+        end
+        % Compress a full array
+        if (nargin >= 1) && isa(varargin{1}, 'double')
+            tt = tt.compress(varargin{:});
         end
     end
     
@@ -143,6 +149,8 @@ methods( Static, Access = public )
     x = zeros(r, n);
     % Create a tt with all ones as cores 
     x = ones(n);
+    % Compress a full array into TT
+    x = compress(A, opts, n);
 end
 
 end

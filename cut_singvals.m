@@ -20,12 +20,12 @@ sum_s = sum_s(end:-1:1);
 % the whole singvals
 
 if opts.abstol    
-    s_abs = find(sum_s<=opts.abstol^2, 1);
-    s_abs = min([s_abs, numel(sum_s)]); % A short way to deal with possible empty s_abs
+    s_abs = find(sum_s>opts.abstol^2, 1, 'last');
+    s_abs = max([s_abs, 1]); % A short way to deal with possible empty s_abs
 end
 if opts.reltol
-    s_rel = find(sum_s<=opts.reltol^2*sum_s(1), 1);
-    s_rel = min([s_rel, numel(sum_s)]);
+    s_rel = find(sum_s>opts.reltol^2*sum_s(1), 1, 'last');
+    s_rel = max([s_rel, 1]);
 end
 s = min([s_abs, s_rel, opts.maxrank, length(singvals)]);
 end
