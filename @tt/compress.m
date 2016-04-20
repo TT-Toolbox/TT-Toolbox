@@ -23,8 +23,10 @@ function [x] = compress(A, opts, n)
 %   x = COMPRESS(A, opts, n) reshapes A to the mode sizes given in a d x 2
 %   array n, then proceeds as previously described.
 %
-%   x = COMPRESS(A) uses the absolute tolerance eps(norm(A,'fro'))
+%   x = COMPRESS(A) uses the absolute tolerance max(n*m)*eps(norm(A(:)))
 %   (consistent with ordinary SVD-based rank and pinv commands)
+%
+%   See also: TT, TT.orthogonalize, TT.round
 
 %   TT-Toolbox
 %   Copyright: TT-Toolbox team, 2016
@@ -35,14 +37,14 @@ function [x] = compress(A, opts, n)
 % Check if the mode sizes are given
 if (nargin > 2) && (~isempty(n))
     A = reshape(A, n(:)');
-end
-
-% Determine mode sizes from A. This is nasty since Matlab swallows all
-% tail singletons...
-n = size(A);
-% ... in particular, if ndims is odd, we have to add "1" explicitly
-if mod(numel(n), 2) == 1
-    n = [n, 1];
+else
+    % Determine mode sizes from A. This is nasty since Matlab swallows all
+    % tail singletons...
+    n = size(A);
+    % ... in particular, if ndims is odd, we have to add "1" explicitly
+    if mod(numel(n), 2) == 1
+        n = [n, 1];
+    end
 end
 d = numel(n)/2;
 n = reshape(n, d, 2);
@@ -54,7 +56,7 @@ A = ipermute(A, [1:2:2*d-1, 2:2:2*d]);
 %   -> vector: exact target rank
 %   -> struct: opts structure
 if (nargin < 2) || (isempty(opts))
-    opts = struct('abstol', eps(norm(A(:))));
+    opts = struct('abstol', eps(norm(A(:)))*max(prod(n,2)));
 end
 truncatetorank = false;
 if (isscalar(opts)) && (isa(opts, 'double'))
@@ -83,6 +85,11 @@ end
 if (opts.abstol ~= false || opts.reltol ~= false) && truncatetorank
     error('Cannot have both tolerance-based rounding and exact target rank at the same time!')
 end
+
+% Divide tolerances by sqrt(d-1), otherwise the total error may be >tol
+opts.abstol = opts.abstol/sqrt(d-1);
+opts.reltol = opts.reltol/sqrt(d-1);
+
 
 % Finally, start compression
 x = cell(d, 1);
