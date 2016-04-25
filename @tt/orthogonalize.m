@@ -14,12 +14,8 @@ function x = orthogonalize(x, mu)
 [d,n,r,cores] = check_consistency(x);
 orth_pos = x.orth;
 
-if ~isscalar(mu)
-    error('Second argument must be a scalar value')
-else
-    if round(real(mu)) ~= mu || mu < 1 || mu > d
-        error('Second argument must be a valid index between 1,...x.d')
-    end
+if ~isscalar(mu) || round(real(mu)) ~= mu || mu < 1 || mu > d
+    error('tt:InputError', 'Second argument must be a valid index between 1,...,x.d')
 end
 
 start_pos = 1;
