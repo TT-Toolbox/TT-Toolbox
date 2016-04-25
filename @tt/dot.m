@@ -13,36 +13,43 @@ function [c] = dot(a,b,varargin)
 %   http://github.com/TT-Toolbox/TT-Toolbox
 %   BSD 2-clause license, see LICENSE
 
+if ~isa(a,'tt') || ~isa(b,'tt')
+    error('tt:InputError', 'First two arguments must be of class tt')
+end
 
-if numel(varargin)>=2
+if numel(varargin) == 1
+    error('tt:InputError', 'Wrong number of arguments. Expected either 2 or 4')
+elseif numel(varargin) == 2
     % We have a partial dot product
     dir = varargin{1};
     upto = varargin{2};
-    if ~isa(upto, 'double')
-        error('The block index upto should be numeric');
+    if ~isscalar(upto) || ~round(real(upto)) ~= upto || upto < 1 || upto > a.d
+        error('tt:InputError', 'Third argument has to be a valid index between 1,...,a.d');
     end
     
     if strcmpi(dir, 'lr')
-        a = subtensor(a,1,upto);
-        b = subtensor(b,1,upto);
+        a = subtensor(a, 1, upto);
+        b = subtensor(b, 1, upto);
     elseif strcmpi(dir,'rl')
-        a = subtensor(a,upto,a.d);
-        b = subtensor(b,upto,b.d);
+        a = subtensor(a, upto, a.d);
+        b = subtensor(b, upto, b.d);
     else
-        error('dir should be either "lr" or "rl"');
+        error('tt:InputError', 'dir should be either "lr" or "rl"');
     end
     
     c = dot(a,b);
     return;
+elseif numel(varargin) > 2
+    error('tt:InputError', 'Too many input arguments')
 end
 
 [d,na,ra,a] = check_consistency(a);
 [d2,nb,rb,b] = check_consistency(b);
 if ( d~= d2 )
-    error('Dimensions of a and b differ');
+    error('tt:DimensionMismatch', 'Dimensions of a and b differ');
 end
-if any(prod(na,2) ~= prod(nb,2))
-    error('Mode sizes of a and b are inconsistent');
+if any(prod(na, 2) ~= prod(nb, 2))
+    error('tt:DimensionMismatch', 'Mode sizes of a and b are inconsistent');
 end
 
 if (ra(1)*rb(1) > 1) && (ra(d+1)*rb(d+1) > 1)

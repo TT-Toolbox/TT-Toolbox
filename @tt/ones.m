@@ -11,7 +11,7 @@ function x = ones(n)
 %   BSD 2-clause license, see LICENSE
 
 if any(n(:) ~= round(real(n(:)))) || any(n(:) < 1) || (size(n,2) ~= 2)
-    error('Size vector must be a dx2 matrix of integers > 0')
+    error('tt:InputError', 'Size vector must be a dx2 matrix of integers > 0')
 end
 
 nn = num2cell(n, 2);

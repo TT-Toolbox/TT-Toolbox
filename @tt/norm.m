@@ -11,7 +11,10 @@ function res = norm(x)
 %   http://github.com/TT-Toolbox/TT-Toolbox
 %   BSD 2-clause license, see LICENSE
 
-[~,~,~,cores] = check_consistency(x);
+[~,~,r,cores] = check_consistency(x);
+if r(1) ~= 1 || r(end) ~= 1
+    error('tt:DimensionMismatch', 'First and last ranks of the tensor must be 1')
+end
 if x.orth ~= 0
     res = norm(cores{x.orth}(:));
 else
