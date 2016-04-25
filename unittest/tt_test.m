@@ -11,4 +11,8 @@ rand_test
 randn_test
 zeros_test
 ones_test
+full_test
+imag_test
+real_test
+
 
