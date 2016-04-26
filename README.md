@@ -19,3 +19,8 @@ A pull request should satisfy the following requirements:
 - try to keep the code style of the project;
 
 
+Initialization
+====================
+
+- Run setup.m to add all directories to the Matlab path.
+

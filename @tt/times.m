@@ -4,7 +4,7 @@ function [c]=times(a,b,varargin)
 %   c = TIMES(a,b) Pointwise product of two TT matrices, or 
 %       a TT with a scalar
 %
-%   See also: MTIMES, PLUS, MINUS
+%   See also: MTIMES, PLUS, MINUS, POWER, MPOWER
 
 %   TT-Toolbox
 %   Copyright: TT-Toolbox team, 2016

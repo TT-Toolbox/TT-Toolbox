@@ -4,7 +4,7 @@ function [c]=mtimes(a,b,varargin)
 %   c = MTIMES(a,b) Matrix product of two TT matrices, or 
 %       a product of a TT with a double matrix. 
 %
-%   See also: TIMES, PLUS, MINUS
+%   See also: TIMES, PLUS, MINUS, POWER, MPOWER
 
 %   TT-Toolbox
 %   Copyright: TT-Toolbox team, 2016
@@ -24,7 +24,7 @@ if isa(a,'tt') && isa(b,'double')
         cores{d} = tensorprod(cores{d}, b.', 4);
         c = tt(cores); 
         if a.orth == d 
-            c.orth == d;
+            c.orth = d;
         end
     end
     return;
@@ -32,7 +32,7 @@ end
 
 % scalar*tt
 if isa(a,'double') && isa(b,'tt')
-    [d,~,~,cores] = check_consistency(b);
+    [~,~,~,cores] = check_consistency(b);
     if isscalar(a) 
         pos = max(~b.orth, b.orth);
         cores{pos} = a*cores{pos};
@@ -41,8 +41,8 @@ if isa(a,'double') && isa(b,'tt')
     else
         cores{1} = tensorprod(cores{1}, a, 1);
         c = tt(cores); 
-        if a.orth == 1
-            c.orth == 1;
+        if b.orth == 1
+            c.orth = 1;
         end
     end
     return;
