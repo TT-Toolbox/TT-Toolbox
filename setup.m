@@ -6,9 +6,6 @@
 %   BSD 2-clause license, see LICENSE
 
 addpath(pwd);
-cd unittest
-addpath(pwd)
-cd tt
-addpath(pwd)
-cd ..
-cd ..
+addpath([pwd, filesep, 'aux']);
+addpath([pwd, filesep, 'unittest']);
+addpath([pwd, filesep, 'unittest', filesep, 'tt']);
