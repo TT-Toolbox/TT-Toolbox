@@ -54,10 +54,10 @@ if isa(a,'tt') && isa(b,'tt')
     [d,na,ra,a] = check_consistency(a);
     [d2,nb,rb,b] = check_consistency(b);
     if ( d~= d2 )
-        error('Dimensions of a and b differ');
+        error('tt:DimensionMismatch','Dimensions of a and b differ');
     end
     if any(na(:,2) ~= nb(:,1))
-        error('Mode sizes of a and b are inconsistent');
+        error('tt:DimensionMismatch','Mode sizes of a and b are inconsistent');
     end
     
     if (all(na(:,1) == 1)) && (all(nb(:,2) == 1)) && (min(ra(1)*rb(1), ra(d+1)*rb(d+1)) == 1)

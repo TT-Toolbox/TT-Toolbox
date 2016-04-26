@@ -36,28 +36,28 @@ elseif isfloat(opts)
     opts = struct('rank', opts);
 elseif isa(opts, 'struct') % that's ok
 else
-    error('Error in second argument. Specify either a scalar (rel. tol), a rank vector or a struct')
+    error('tt:InputError','Error in second argument. Specify either a scalar (rel. tol), a rank vector or a struct')
 end
 if ~isfield(opts, 'abstol'),    opts.abstol  = false;   end
 if ~isfield(opts, 'reltol'),    opts.reltol  = false;   end
 if ~isfield(opts, 'maxrank'),   opts.maxrank = inf;     end
 if isfield(opts, 'rank')
     if size(opts.rank) ~= size(r)
-        error('Error in option struct: opts.rank is not of size(x.r)') 
+        error('tt:InputError','Error in option struct: opts.rank is not of size(x.r)') 
     end
     if any(opts.rank ~= round(real(opts.rank))) || any(opts.rank < 1) 
-        error('Rank vector must be an integer vector with all values bigger or equal than one')
+        error('tt:InputError','Rank vector must be an integer vector with all values bigger or equal than one')
     end
     if any(opts.rank > r)
-        error('Rank truncation cannot increase the rank!')
+        error('tt:InputError','Rank truncation cannot increase the rank!')
     end
     truncatetorank = true;
 end
 if ~opts.abstol && ~opts.reltol && (opts.maxrank == inf) && ~truncatetorank
-    error('Unknown struct in second argument. Specify at least one of the fields abstol, reltol or maxrank or specify a target rank using the field rank');
+    error('tt:InputError','Unknown struct in second argument. Specify at least one of the fields abstol, reltol or maxrank or specify a target rank using the field rank');
 end
 if (opts.abstol ~= false || opts.reltol ~= false) && truncatetorank
-    error('Cannot have both tolerance-based rounding and exact target rank at the same time!')
+    error('tt:InputError','Cannot have both tolerance-based rounding and exact target rank at the same time!')
 end
 
 % Divide tolerances by sqrt(d-1), otherwise the total error may be >tol

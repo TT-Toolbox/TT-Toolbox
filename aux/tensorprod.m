@@ -3,8 +3,6 @@ function B = tensorprod(A, X, idx)
 %   B = TENSORPROD(A, X, idx) performs the product between the
 %   tensor A and matrix X along the mode idx. 
 %
-%   TENTATIVE VERSION
-%
 %   See also MATRICIZE, TENSORIZE, UNFOLD.
     
 %   TT-Toolbox

@@ -11,17 +11,15 @@ function [d,n,r,cores] = check_consistency(x)
 %   http://github.com/TT-Toolbox/TT-Toolbox
 %   BSD 2-clause license, see LICENSE
 
-
 cores = x.cores;
-
 if any(cellfun(@(x)ndims(x), cores) > 4)
-    error('Some TT cores have ndims>4');
+    error('tt:DimensionMismatch','Some TT cores have ndims>4');
 end
 
 r = cellfun(@(x)size(x,1), cores);
 r2 = cellfun(@(x)size(x,4), cores);
 if any(r(2:end) ~= r2(1:end-1))
-    error('Inconsistent TT ranks in the core storage');
+    error('tt:DimensionMismatch','Inconsistent TT ranks in the core storage');
 end
 r = [r; r2(end)];
 
