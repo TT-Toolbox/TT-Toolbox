@@ -12,6 +12,13 @@ function [d,n,r,cores] = check_consistency(x)
 %   BSD 2-clause license, see LICENSE
 
 cores = x.cores;
+% Check for an empty tt
+if isempty(cores)
+    d = size(x.cores, 1);
+    n = [0 0];
+    r = 0;
+    return;
+end
 if any(cellfun(@(x)ndims(x), cores) > 4)
     error('tt:DimensionMismatch','Some TT cores have ndims>4');
 end
