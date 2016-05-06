@@ -80,6 +80,9 @@ if isa(a,'tt') && isa(b,'tt')
     end
     
     c = tt(c);
+    return;
 end
+
+error('tt:InputError','Unknown input: Arguments need to be either (tt, tt) or (tt, double) or (double, tt)')
 
 end
