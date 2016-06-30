@@ -15,7 +15,7 @@ function [c] = plus(a, b)
 % tt+scalar = tt+scalar*ones
 if isa(a,'tt') && isa(b,'double')
     if numel(b) ~= 1
-        error('b should be scalar')
+        error('tt:InputError','b should be scalar')
     end
     c = a + b*tt.ones(a.n);
 end
@@ -23,7 +23,7 @@ end
 % scalar+tt = tt+scalar*ones
 if isa(a,'double') && isa(b,'tt')
     if numel(a) ~= 1
-        error('a should be scalar')
+        error('tt:InputError','a should be scalar')
     end
     c = a*tt.ones(b.n) + b;
 end
@@ -33,13 +33,13 @@ if isa(a,'tt') && isa(b,'tt')
     [d,na,ra,a] = check_consistency(a);
     [d2,nb,rb,b] = check_consistency(b);
     if ( d~= d2 )
-        error('Dimensions of a and b differ');
+        error('tt:DimensionMismatch','Dimensions of a and b differ');
     end
     if any(na ~= nb)
-        error('Mode sizes of a and b are inconsistent');
+        error('tt:DimensionMismatch','Mode sizes of a and b are inconsistent');
     end
     if (ra(1) ~= rb(1)) || (ra(d+1) ~= rb(d+1))
-        error('Border ranks of a and b differ');
+        error('tt:DimensionMismatch','Border ranks of a and b differ');
     end
     
     % Put mode sizes together

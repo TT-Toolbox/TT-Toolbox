@@ -46,7 +46,7 @@ else
         n = [n, 1];
     end
 end
-d = numel(n)/2;
+d = numel(n) / 2;
 n = reshape(n, d, 2);
 A = ipermute(A, [1:2:2*d-1, 2:2:2*d]);
 % Now A has dimensions n1,m1,n2,m2,...
@@ -65,30 +65,30 @@ elseif isfloat(opts)
     opts = struct('rank', opts);
 elseif isa(opts, 'struct')
 else
-    error('Error in second argument. Specify either a scalar (rel. tol), a rank vector or a struct')
+    error('tt:InputError','Error in second argument. Specify either a scalar (rel. tol), a rank vector or a struct')
 end
 if ~isfield(opts, 'abstol'),    opts.abstol  = false;   end
 if ~isfield(opts, 'reltol'),    opts.reltol  = false;   end
 if ~isfield(opts, 'maxrank'),   opts.maxrank = inf;     end
 if isfield(opts, 'rank')
-    if size(opts.rank) ~= size(r)
-        error('Error in option struct: opts.rank is not of size(x.r)') 
+    if any(size(opts.rank) ~= [d+1,1])
+        error('tt:InputError','Error in option struct: opts.rank is not of size (d+1)x1') 
     end
     if any(opts.rank ~= round(real(opts.rank))) || any(opts.rank < 1) 
-        error('Rank vector must be an integer vector with all values bigger or equal than one')
+        error('tt:InputError','Rank vector must be an integer vector with all values bigger or equal than one')
     end
     truncatetorank = true;
 end
 if ~opts.abstol && ~opts.reltol && (opts.maxrank == inf) && ~truncatetorank
-    error('Unknown struct in second argument. Specify at least one of the fields abstol, reltol or maxrank or specify a target rank using the field rank');
+    error('tt:InputError','Unknown struct in second argument. Specify at least one of the fields abstol, reltol or maxrank or specify a target rank using the field rank');
 end
 if (opts.abstol ~= false || opts.reltol ~= false) && truncatetorank
-    error('Cannot have both tolerance-based rounding and exact target rank at the same time!')
+    error('tt:InputError','Cannot have both tolerance-based rounding and exact target rank at the same time!')
 end
 
 % Divide tolerances by sqrt(d-1), otherwise the total error may be >tol
-opts.abstol = opts.abstol/sqrt(d-1);
-opts.reltol = opts.reltol/sqrt(d-1);
+opts.abstol = opts.abstol / sqrt(d-1);
+opts.reltol = opts.reltol / sqrt(d-1);
 
 
 % Finally, start compression
@@ -104,8 +104,8 @@ for i = 1:d-1
     else
         % Truncation to exact rank
         s = opts.rank(i+1);
-        if (s>min(size(A)))
-            error('Rank truncation cannot increase the rank!')
+        if s > min(size(A))
+            error('tt:DimensionMismatch','Rank truncation cannot increase the rank!')
         end
     end
     
