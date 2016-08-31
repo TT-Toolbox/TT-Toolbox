@@ -144,9 +144,10 @@ methods (Access = public)
 end
 
 methods( Static, Access = public )
-    % Create a tt with entries from uniform distribution
+    % Create a tt with random entries distributed uniformly in [0,1]
     x = rand(r, n);
-    % Create a tt with entries from uniform distribution
+    % Create a tt with random entries distributed normally with zero mean
+    % and unit variance
     x = randn(r, n);
     % Create a tt with all zeros as cores 
     x = zeros(r, n);
