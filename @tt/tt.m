@@ -44,10 +44,6 @@ properties( Dependent = true, SetAccess = private, GetAccess = public )
     %   d = x.D  Returns the number of cores (1x1 integer).
     d
 
-    %x.dd   Number of mode indices per core (Dependent property)
-    %   dd = x.DD  Returns the number of mode indices represented by each of the row and columns indices of each core (1x1 integer).
-    dd
-
     %x.N   Mode sizes of the decomposition (Dependent property)
     %   n = x.N  Returns an array of the mode sizes of the decomposition (dx2xdd integer).
     n
@@ -62,6 +58,10 @@ properties( Dependent = true, SetAccess = private, GetAccess = public )
 end    
 
 properties( SetAccess = private, GetAccess = public )
+    %x.dd   Number of mode indices per core (Public/private property)
+    %   dd = x.DD  Returns the number of mode indices represented by each of the row and columns indices of each core (1x1 integer).
+    dd
+
     %x.FMT   Format of the decomposition (Public/private property)
     %   An array of integers of size dxdd; the values belong to
     %   (0:dfull); the set of positive values is (1:dfull); the positive
