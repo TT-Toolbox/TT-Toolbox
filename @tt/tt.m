@@ -31,6 +31,11 @@ properties( SetAccess = public, GetAccess = public )
     %   Warning: direct assignment x.orth = orth is
     %   allowed, but does not perform consistency check.
     orth = 0;
+
+	%
+	%
+	%
+	fmt = [];
 end
 
 % Dependent properties
