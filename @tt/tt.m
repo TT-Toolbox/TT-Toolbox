@@ -31,55 +31,72 @@ properties( SetAccess = public, GetAccess = public )
     %   Warning: direct assignment x.orth = orth is
     %   allowed, but does not perform consistency check.
     orth = 0;
-
-%     %
-%     %
-%     %
-%     fmt = [];
-end
-
-properties( SetAccess = private, GetAccess = public )
-    %
-    %
-    %
-    fmt = [];
 end
 
 % Dependent properties
 properties( Dependent = true, SetAccess = private, GetAccess = public )
-    %x.R   TT ranks (Dependent property)
+    %x.R   TT ranks of the decomposition (Dependent property)
     %   r = x.R  Returns a (d+1) x 1 array of TT ranks. Outputs a warning
     %   if TT cores have inconsistent ranks.
-    r 
+    r
 
-    %x.N   Mode sizes (Dependent property)
-    %   n = x.N  Returns a d x 2 array of (internal) mode sizes.
-    n 
+    %x.D   Number of cores of the decomposition (Dependent property)
+    %   d = x.D  Returns the number of cores (1x1 integer).
+    d
 
-    %x.D   Dimension (Dependent property)
-    %   d = x.D  Returns the order of the TT tensor (1x1 integer).
-    d 
+    %x.dd   Number of mode indices per core (Dependent property)
+    %   dd = x.DD  Returns the number of mode indices represented by each of the row and columns indices of each core (1x1 integer).
+    dd
+
+    %x.N   Mode sizes of the decomposition (Dependent property)
+    %   n = x.N  Returns an array of the mode sizes of the decomposition (dx2xdd integer).
+    n
+
+    %x.DFULL   Number of indices of row (and column) indices in the represented tensor
+    %   dfull = x.DFULL  Returns the number of row (and column) indices in the represented tensor (1x1 integer).
+    dfull
+
+    %x.NFULL   Mode sizes of the represented tensor (Dependent property)
+    %   nfull = x.NFULL  Returns the mode size of the represented tensor (dfullx2 integer).
+    nfull
 end    
+
+properties( SetAccess = private, GetAccess = public )
+    %x.FMT   Format of the decomposition (Public/private property)
+    %   An array of integers of size [d dd]; the values belong to
+    %   (0:dfull); the set of positive values is (1:dfull); the positive
+    %   values are distinct.
+    %   Encodes the format of the decomposition, namely the way the mode
+    %   indices of the decomposition are mapped into the indices of the
+    %   represented tensor
+    %
+    fmt = [];
+end
 
 methods % for dependent props
     function [r] = get.r(x)
-        % Here we need to extract both ranks and compare them to check for
-        % consistency
         if (isempty(x.cores))
             r=0;
             return;
         end
+        % For each core, extract both ranks
         r = cellfun(@(x)size(x,1), x.cores);
         r2 = cellfun(@(x)size(x,4), x.cores);
+        % Check the ranks for consistency
         if any(r(2:end) ~= r2(1:end-1))
             warning('Inconsistent TT ranks in the core storage');
         end
-        % Don't forget the last rank
+        % Assemble a complete array of ranks
         r = [r; r2(end)];
     end
     
+    function [d] = get.d(x)
+        % Number of cores of the decomposition
+        d = size(x.cores, 1);
+    end
+    
     function [n] = get.n(x)
-        % Extract the mode sizes
+        % Mode sizes of the decomposition
         if isempty(x.cores)
             n=[0 0]; % consistent with size([])
             return;
@@ -89,10 +106,14 @@ methods % for dependent props
         n = [n, m];
     end
     
-    function [d] = get.d(x)
-        % Dimension
-        d = size(x.cores, 1);
+    function [dfull] = get.dfull(x)
+        % Number of indices of row (and column) indices in the represented tensor
     end
+    
+    function [nfull] = get.nfull(x)
+        % Mode sizes of the represented tensor
+    end
+
 end
 
 % All other methods

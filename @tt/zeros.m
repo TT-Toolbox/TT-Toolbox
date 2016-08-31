@@ -36,13 +36,13 @@ if (nargin < 3)
     % n will be treated as the mode size of the decomposition to be
     % constructed
     d = size(n,1);
-	D = size(n,3);
+	dd = size(n,3);
     % Check n
-    if numel(n)~=d*2*D
-        error('tt:InputError', 'Size array is expected to have size [d 2 D], where, for the decomposition to be constructed, d is the number of cores and D is the number of row and column dimensions in each core')
+    if numel(n)~=d*2*dd
+        error('tt:InputError', 'Size array is expected to have size [d 2 dd], where, for the decomposition to be constructed, d is the number of cores and dd is the number of row and column dimensions in each core')
     end
     % Set default format
-    fmt = reshape(1:d*D,[D d])';
+    fmt = reshape(1:d*dd,[dd d])';
 else
     % A format is specified
     % n will be treated as the mode size of the tensor to be constructed;
@@ -60,18 +60,18 @@ else
     end
     fmt = double(fmt);
     d = size(fmt,1);
-    D = size(fmt,2);
-    if numel(fmt)~=d*D
+    dd = size(fmt,2);
+    if numel(fmt)~=d*dd
         error('tt:InputError', 'Format array is expected to be a matrix')
     end
     dimfull_ind = unique([0; fmt(:)]);
     if any(fmt(:) ~= round(real(fmt(:)))) || any(fmt(:) < 0) || any(fmt(:) > dfull) || ~isequal(dimfull_ind,(0:dfull)')
-        error('tt:InputError', 'Let, for the tensor to be constructed, dfull be the total number of row dimensions (=the total number of row dimensions). Let, for the decomposition to be constructed, d be the number of cores and D be the number of row and column dimensions in each core. Format array is expected to have size [d D] and to consist of nonnegative integers, exactly dfull of them being positive. The positive values should be distinct and belong to the set (1:dfull)')
+        error('tt:InputError', 'Format array is expected to have size [d dd]; the values should belong to (0:dfull); the set of positive values should be (1:dfull); the positive values should be distinct')
     end
     % Set n
-    n = ones([d 2 D]);
+    n = ones([d 2 dd]);
     for k = 1:d
-        for K = 1:D
+        for K = 1:dd
             if fmt(k,K) == 0
                 continue
             end
