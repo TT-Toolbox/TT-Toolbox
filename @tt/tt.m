@@ -63,7 +63,7 @@ end
 
 properties( SetAccess = private, GetAccess = public )
     %x.FMT   Format of the decomposition (Public/private property)
-    %   An array of integers of size [d dd]; the values belong to
+    %   An array of integers of size dxdd; the values belong to
     %   (0:dfull); the set of positive values is (1:dfull); the positive
     %   values are distinct.
     %   Encodes the format of the decomposition, namely the way the mode
