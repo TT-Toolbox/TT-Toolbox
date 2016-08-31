@@ -32,10 +32,17 @@ properties( SetAccess = public, GetAccess = public )
     %   allowed, but does not perform consistency check.
     orth = 0;
 
-	%
-	%
-	%
-	fmt = [];
+%     %
+%     %
+%     %
+%     fmt = [];
+end
+
+properties( SetAccess = private, GetAccess = public )
+    %
+    %
+    %
+    fmt = [];
 end
 
 % Dependent properties
