@@ -48,6 +48,10 @@ properties( Dependent = true, SetAccess = private, GetAccess = public )
     %   n = x.N  Returns an array of the mode sizes of the decomposition (dx2xdd integer).
     n
 
+    %x.dd   Number of mode indices per core (Public/private property)
+    %   dd = x.DD  Returns the number of mode indices represented by each of the row and columns indices of each core (1x1 integer).
+    dd
+
     %x.DFULL   Number of indices of row (and column) indices in the represented tensor
     %   dfull = x.DFULL  Returns the number of row (and column) indices in the represented tensor (1x1 integer).
     dfull
@@ -58,9 +62,8 @@ properties( Dependent = true, SetAccess = private, GetAccess = public )
 end    
 
 properties( SetAccess = private, GetAccess = public )
-    %x.dd   Number of mode indices per core (Public/private property)
-    %   dd = x.DD  Returns the number of mode indices represented by each of the row and columns indices of each core (1x1 integer).
-    dd
+    
+    nn
 
     %x.FMT   Format of the decomposition (Public/private property)
     %   An array of integers of size dxdd; the values belong to
@@ -96,6 +99,7 @@ methods % for dependent props
     end
     
     function [n] = get.n(x)
+%TODO change to prod(x.nn,3)
         % Mode sizes of the decomposition
         if isempty(x.cores)
             n=[0 0]; % consistent with size([])
@@ -104,6 +108,11 @@ methods % for dependent props
         n = cellfun(@(x)size(x,2), x.cores);
         m = cellfun(@(x)size(x,3), x.cores);
         n = [n, m];
+    end
+    
+    function [dd] = get.dd(x)
+        % Number of mode indices per core
+        dd = size(x.nn, 3);
     end
     
     function [dfull] = get.dfull(x)
@@ -125,8 +134,23 @@ methods (Access = public)
             tt.cores = [];
         end
         % Populate tt with a cell of cores
-        if (nargin == 1) && isa(varargin{1}, 'cell')
+        if (nargin >= 1) && isa(varargin{1}, 'cell')
+%TODO             check nn, fmt, check the cores for consistency
             tt.cores = varargin{1};
+            if (nargin < 2)
+                nn = [cellfun(@(x)size(x,2), tt.cores) cellfun(@(x)size(x,3), tt.cores)];
+            else
+                nn = varargin{2};
+            end
+            d = size(nn, 1);
+            dd = size(nn, 3);
+            if (nargin < 3)
+                fmt = reshape(1:d*dd, [dd d])';
+            else
+                fmt = varargin{3};
+            end
+            tt.nn = nn;
+            tt.fmt = fmt;
         end
         % Compress a full array
         if (nargin >= 1) && isa(varargin{1}, 'double')

@@ -96,4 +96,63 @@ else
 end
                     
 
+
+disp('***')
+
+r = x.r;
+d = x.d;
+n = x.n;
+dd = x.dd;
+nn = x.nn;
+% dfull = x.dfull;
+% nfull = x.nfull;
+fmt = x.fmt;
+
+r_len = max(r);
+r_len = 1+floor(log10(r_len));
+d_len = 1+floor(log10(d));
+n_len = max(n, [], 1);
+n_len = 1+floor(log10(n_len));
+nn_len = max(nn, [], 1);
+nn_len = 1+floor(log10(nn_len));
+
+offset='   ';
+fprintf('%s%d\n', offset, r(1));
+fprintf('%s \\\n', offset);
+for k = 1:d
+    fprintf(sprintf('%s  U %%%dd', offset, d_len), k);
+    fprintf(':   ');
+    fprintf(sprintf('%%%dd x %%%dd', n_len(1,1), n_len(1,2)), n(k,1), n(k,2));
+    fprintf('  <->  ');
+    for s = 1:2
+        if s == 2
+            fprintf(' x ');
+        end
+        if dd > 1
+            fprintf('[ ');
+        end
+        for kk = 1:dd
+            if kk > 1
+                fprintf(' ');
+            end
+            fprintf(sprintf('%%%dd',nn_len(1,s,kk)), nn(k,s,kk));
+        end
+        if dd > 1
+            fprintf(' ]');
+        end
+    end
+    fprintf('\n');
+    fprintf('%s /\n', offset);
+    fprintf('%s%d\n', offset, r(k+1));
+    if k == d
+        continue
+    end
+    fprintf('%s \\\n', offset);
+end
+   
+    
+    
+
+
+
 end
