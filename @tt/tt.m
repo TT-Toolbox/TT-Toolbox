@@ -138,14 +138,23 @@ methods (Access = public)
 %TODO             check nn, fmt, check the cores for consistency
             tt.cores = varargin{1};
             if (nargin < 2)
+                % nn is not given
+                % set dd=1 and read the sizes from the cores
+                dd = 1;
                 nn = [cellfun(@(x)size(x,2), tt.cores) cellfun(@(x)size(x,3), tt.cores)];
             else
+                % nn is given
+                % set nn and dd based on the input
                 nn = varargin{2};
+                dd = size(nn, 3);
             end
             d = size(nn, 1);
-            dd = size(nn, 3);
             if (nargin < 3)
-                fmt = reshape(1:d*dd, [dd d])';
+                % fmt is not given
+                % set the default fmt
+                fmt=1:d*2*dd;
+                fmt = reshape(fmt, [dd d 2]);
+                fmt = permute(fmt, [2 3 1]);
             else
                 fmt = varargin{3};
             end
