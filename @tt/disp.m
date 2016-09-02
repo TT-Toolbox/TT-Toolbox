@@ -108,51 +108,131 @@ nn = x.nn;
 % nfull = x.nfull;
 fmt = x.fmt;
 
+offset = blanks(3);
+lbl_n1 = 'size';
+lbl_n2 = 'folded';
+lbl_nn1 = 'size';
+lbl_nn2 = 'unfolded';
+lbl_fmt1 = 'corresponding indices of the represented matrix';
+sep_n_nn1 = '  \  ';
+sep_nn_fmt1 = '   \   ';
+sep_n_nn2 = '  /  ';
+sep_nn_fmt2 = '   /   ';
+sym_core='U';
+sep_core=' ';
+sep_cores_n = ':   ';
+sep_n = ' x ';
+sep_n_nn = '  ~  ';
+sep_nn_fmt = '  <->  ';
+sep_nn = ' x ';
+del_nn_left = '(';
+del_nn_right = ')';
+del_nn_middle = ' ';
+sep_fmt = ' x ';
+del_fmt_left = '(';
+del_fmt_right = ')';
+del_fmt_middle = ' ';
+sym_void = '_';
+sym_dim = '#';
+
 r_len = max(r);
 r_len = 1+floor(log10(r_len));
 d_len = 1+floor(log10(d));
 n_len = max(n, [], 1);
 n_len = 1+floor(log10(n_len));
+
 nn_len = max(nn, [], 1);
 nn_len = 1+floor(log10(nn_len));
+nn_len = max(nn_len, length(sym_void));
 
-offset='   ';
-fprintf('%s%d\n', offset, r(1));
-fprintf('%s \\\n', offset);
+dim_void = (fmt == 0);
+fmt_len = 1+floor(log10(fmt));
+fmt_len(dim_void) = length(sym_void);
+fmt_len(~dim_void) = fmt_len(~dim_void)+length(sym_dim);
+fmt_len = max(fmt_len, [], 1);
+
+width_n = sum(n_len)+length(sep_n);
+offset_n = max([width_n length(lbl_n1) length(lbl_n2)])-width_n;
+width_n = width_n + offset_n;
+offset_n = blanks(offset_n);
+
+width_nn = 2*length(del_nn_left)+2*length(del_nn_left)+2*(dd-1)*length(del_nn_middle)+sum(nn_len(:))+length(sep_nn);
+offset_nn = max([width_nn length(lbl_nn1) length(lbl_nn2)])-width_nn;
+width_nn = width_nn + offset_nn;
+offset_nn = blanks(offset_nn);
+
+width_fmt = length(del_fmt_left)+length(del_fmt_left)+(dd-1)*length(del_fmt_middle)+sum(fmt_len);
+
+
+line = [offset blanks(r_len+1+length(sym_core)+length(sep_core)+d_len+length(sep_cores_n))];
+line = [line lbl_n1 blanks(width_n-length(lbl_n1))];
+line = [line sep_n_nn1];
+line = [line lbl_nn1 blanks(width_nn-length(lbl_nn1)) ];
+line = [line sep_nn_fmt1 lbl_fmt1];
+disp(line);
+line = [offset blanks(r_len-1-floor(log10(r(1)))) num2str(r(1))];
+line = [line blanks(1+length(sym_core)+length(sep_core)+d_len+length(sep_cores_n))];
+line = [line lbl_n2 blanks(width_n-length(lbl_n2))];
+line = [line sep_n_nn2];
+line = [line lbl_nn2 blanks(width_nn-length(lbl_nn2)) ];
+line = [line sep_nn_fmt2 'row' blanks(width_fmt+length(sep_fmt)-length('row')) 'column'];
+disp(line);
+disp([offset blanks(r_len) '\']);
+
 for k = 1:d
-    fprintf(sprintf('%s  U %%%dd', offset, d_len), k);
-    fprintf(':   ');
-    fprintf(sprintf('%%%dd x %%%dd', n_len(1,1), n_len(1,2)), n(k,1), n(k,2));
-    fprintf('  <->  ');
+    line = [offset blanks(r_len+1) sym_core sep_core];
+    line = [line blanks(d_len-1-floor(log10(k))) num2str(k)];
+    line = [line sep_cores_n];
     for s = 1:2
-        if s == 2
-            fprintf(' x ');
+        if s > 1
+            line = [line sep_n];
         end
-        if dd > 1
-            fprintf('[ ');
+        line = [line blanks(n_len(1,s)-1-floor(log10(n(k,s)))) num2str(n(k,s))];
+    end
+    line = [line offset_n sep_n_nn];
+    for s = 1:2
+        if s > 1
+            line=[line sep_nn];
         end
+        line=[line del_nn_left];
         for kk = 1:dd
             if kk > 1
-                fprintf(' ');
+                line=[line del_nn_middle];
             end
-            fprintf(sprintf('%%%dd',nn_len(1,s,kk)), nn(k,s,kk));
+            nn_str=num2str(nn(k,s,kk));
+            if fmt(k,kk) == 0
+                nn_str = sym_void;
+            end
+            line = [line blanks(nn_len(1,s,kk)-length(nn_str)) nn_str];
         end
-        if dd > 1
-            fprintf(' ]');
-        end
+        line=[line del_nn_right];
     end
-    fprintf('\n');
-    fprintf('%s /\n', offset);
-    fprintf('%s%d\n', offset, r(k+1));
+    line = [line offset_nn sep_nn_fmt];
+    for s = 1:2
+        if s > 1
+            line=[line sep_fmt];
+        end
+        line=[line del_fmt_left];
+        for kk = 1:dd
+            if kk > 1
+                line=[line del_fmt_middle];
+            end
+            fmt_str=[sym_dim num2str(fmt(k,kk))];
+            if fmt(k,kk) == 0
+                fmt_str = sym_void;
+            end
+            line = [line blanks(fmt_len(1,kk)-length(fmt_str)) fmt_str];
+        end
+        line=[line del_fmt_right];
+    end
+    disp(line);
+    disp([offset blanks(r_len) '/']);
+    disp([offset blanks(r_len-1-floor(log10(r(k+1)))) num2str(r(k+1))]);
     if k == d
         continue
     end
-    fprintf('%s \\\n', offset);
+    disp([offset blanks(r_len) '\']);
 end
-   
-    
-    
-
 
 
 end
